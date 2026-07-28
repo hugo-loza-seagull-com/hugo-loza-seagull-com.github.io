@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Hugo Loza at Seagull Software - AI concepts hub" />
+  <title>Hugo Loza | Seagull Software</title>
+  <style>
+    :root {
+      --bg: #070a18;
+      --panel: rgba(10, 17, 40, 0.72);
+      --edge: rgba(125, 189, 255, 0.3);
+      --text: #ebf3ff;
+      --muted: #b4c6e6;
+      --accent: #61dafb;
+      --accent-2: #7b7cff;
+      --shadow: 0 12px 35px rgba(0, 0, 0, 0.45);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      background: var(--bg);
+      font-family: Inter, "Segoe UI", Roboto, system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    #mandelbrot {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      filter: saturate(1.2) contrast(1.05);
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background: radial-gradient(1200px 650px at 15% 0%, rgba(96, 177, 255, 0.18), transparent 65%),
+                  radial-gradient(1200px 650px at 90% 20%, rgba(134, 105, 255, 0.22), transparent 65%),
+                  linear-gradient(180deg, rgba(5, 7, 16, 0.22), rgba(5, 7, 16, 0.72));
+    }
+
+    .wrap {
+      width: min(1200px, 92vw);
+      margin: 0 auto;
+      padding: 2.5rem 0 3rem;
+    }
+
+    header {
+      margin-bottom: 2rem;
+      padding: 1.2rem 1.2rem 1.4rem;
+      border: 1px solid var(--edge);
+      border-radius: 18px;
+      background: rgba(7, 12, 28, 0.72);
+      backdrop-filter: blur(6px);
+      box-shadow: var(--shadow);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.8rem, 3.4vw, 2.9rem);
+      letter-spacing: 0.03em;
+    }
+
+    .sub {
+      margin-top: 0.45rem;
+      color: var(--muted);
+      font-size: clamp(1rem, 1.8vw, 1.2rem);
+    }
+
+    .chips {
+      display: flex;
+      gap: 0.55rem;
+      flex-wrap: wrap;
+      margin-top: 0.9rem;
+    }
+
+    .chip {
+      font-size: 0.82rem;
+      color: #cff1ff;
+      border: 1px solid rgba(112, 211, 255, 0.35);
+      border-radius: 999px;
+      padding: 0.26rem 0.7rem;
+      background: rgba(3, 12, 29, 0.5);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+
+    .card {
+      border: 1px solid var(--edge);
+      border-radius: 16px;
+      background: var(--panel);
+      backdrop-filter: blur(4px);
+      padding: 1rem;
+      box-shadow: var(--shadow);
+    }
+
+    .card h2 {
+      margin: 0 0 0.45rem;
+      font-size: 1.1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 0.4rem;
+    }
+
+    .mini {
+      color: #9ac7ff;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .card p {
+      margin: 0;
+      line-height: 1.46;
+      color: #d8e4fa;
+      font-size: 0.95rem;
+    }
+
+    .bars {
+      display: grid;
+      gap: 0.4rem;
+      margin-top: 0.7rem;
+    }
+
+    .bar {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.11);
+      border-radius: 7px;
+      overflow: hidden;
+      font-size: 0.75rem;
+      color: #d7f0ff;
+    }
+
+    .bar span {
+      display: block;
+      padding: 0.26rem 0.45rem;
+      background: linear-gradient(90deg, rgba(95, 218, 251, 0.85), rgba(123, 124, 255, 0.84));
+      width: var(--w);
+      white-space: nowrap;
+      text-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
+    }
+
+    .flow {
+      margin-top: 0.65rem;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.36rem;
+      font-size: 0.76rem;
+      color: #d5e8ff;
+    }
+
+    .node {
+      border: 1px solid rgba(149, 182, 255, 0.45);
+      border-radius: 999px;
+      padding: 0.21rem 0.52rem;
+      background: rgba(14, 25, 56, 0.8);
+    }
+
+    .arrow { color: #89c8ff; }
+
+    footer {
+      margin-top: 1.5rem;
+      color: #bad2f2;
+      text-align: center;
+      font-size: 0.86rem;
+    }
+
+    a { color: var(--accent); }
+  </style>
+</head>
+<body>
+  <canvas id="mandelbrot" aria-hidden="true"></canvas>
+  <div class="overlay" aria-hidden="true"></div>
+
+  <main class="wrap">
+    <header>
+      <h1>Hugo Loza · Seagull Software</h1>
+      <p class="sub">AI concepts map with modern infograph-style panels on top of a Mandelbrot fractal field.</p>
+      <div class="chips" aria-label="Topics">
+        <span class="chip">LLM</span>
+        <span class="chip">MCP</span>
+        <span class="chip">Agenting</span>
+        <span class="chip">Prompt Engineering</span>
+        <span class="chip">Loop Engineering</span>
+        <span class="chip">Harness Engineering</span>
+      </div>
+    </header>
+
+    <section class="grid" aria-label="AI concept panels">
+      <article class="card"><h2>LLM <span class="mini">core model</span></h2><p>Large Language Models predict and compose text, code, and structured outputs. They power reasoning, summarization, and generation workflows.</p><div class="bars"><div class="bar" style="--w:90%"><span>Language understanding</span></div><div class="bar" style="--w:80%"><span>Generation quality</span></div><div class="bar" style="--w:74%"><span>Reasoning depth</span></div></div></article>
+      <article class="card"><h2>MCP <span class="mini">protocol</span></h2><p>Model Context Protocol connects models to external systems safely and consistently, exposing tools, resources, and prompts through a standard interface.</p><div class="flow"><span class="node">Model</span><span class="arrow">→</span><span class="node">MCP Server</span><span class="arrow">→</span><span class="node">Tools/Data</span></div></article>
+      <article class="card"><h2>Agent <span class="mini">executor</span></h2><p>An agent plans steps, chooses tools, executes actions, and adapts from results to complete goals with less human micromanagement.</p><div class="flow"><span class="node">Plan</span><span class="arrow">→</span><span class="node">Act</span><span class="arrow">→</span><span class="node">Observe</span><span class="arrow">→</span><span class="node">Refine</span></div></article>
+      <article class="card"><h2>Skills <span class="mini">reusable ability</span></h2><p>Skills package domain-specific behavior (analysis, extraction, transformation) so the agent can invoke proven mini-workflows quickly.</p></article>
+      <article class="card"><h2>Tools <span class="mini">action layer</span></h2><p>Tools let models do work beyond text: query APIs, edit files, run checks, and fetch data. Reliable tooling is key to dependable outcomes.</p></article>
+      <article class="card"><h2>Agenting <span class="mini">operating mode</span></h2><p>Agenting is the practice of orchestrating autonomous loops around goals, guardrails, and evidence-driven decision making.</p></article>
+      <article class="card"><h2>Prompt <span class="mini">instruction unit</span></h2><p>A prompt defines task, context, constraints, and expected format. Clear prompts reduce ambiguity and improve consistency.</p></article>
+      <article class="card"><h2>Prompt Engineering <span class="mini">design craft</span></h2><p>Prompt engineering optimizes intent expression: role framing, context layering, examples, and output contracts for predictable behavior.</p></article>
+      <article class="card"><h2>Loop Engineering <span class="mini">feedback cycle</span></h2><p>Loop engineering builds robust iterative cycles: generate, evaluate, repair, and retry with stop conditions and quality thresholds.</p><div class="flow"><span class="node">Generate</span><span class="arrow">↺</span><span class="node">Evaluate</span><span class="arrow">↺</span><span class="node">Improve</span></div></article>
+      <article class="card"><h2>Harness Engineering <span class="mini">reliability shell</span></h2><p>Harness engineering provides scaffolding around agents—tests, telemetry, policy checks, and observability—to make systems safe and repeatable.</p></article>
+    </section>
+
+    <footer>
+      GitHub Pages-ready static site. Learn more at
+      <a href="https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site">GitHub Pages documentation</a>.
+    </footer>
+  </main>
+
+  <script>
+    (function drawMandelbrot() {
+      const canvas = document.getElementById('mandelbrot');
+      const ctx = canvas.getContext('2d', { alpha: false });
+
+      function render() {
+        const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+        const width = Math.floor(window.innerWidth * dpr);
+        const height = Math.floor(window.innerHeight * dpr);
+        canvas.width = width;
+        canvas.height = height;
+        canvas.style.width = window.innerWidth + 'px';
+        canvas.style.height = window.innerHeight + 'px';
+
+        const image = ctx.createImageData(width, height);
+        const data = image.data;
+        const maxIter = 92;
+        const cx = -0.7;
+        const cy = 0.0;
+        const zoom = Math.min(width, height) * 0.41;
+
+        let i = 0;
+        for (let py = 0; py < height; py++) {
+          for (let px = 0; px < width; px++) {
+            const x0 = (px - width / 2) / zoom + cx;
+            const y0 = (py - height / 2) / zoom + cy;
+            let x = 0;
+            let y = 0;
+            let iter = 0;
+            while (x * x + y * y <= 4 && iter < maxIter) {
+              const xt = x * x - y * y + x0;
+              y = 2 * x * y + y0;
+              x = xt;
+              iter++;
+            }
+
+            const t = iter === maxIter ? 0 : iter / maxIter;
+            const r = Math.floor(18 + 110 * Math.pow(t, 0.6));
+            const g = Math.floor(24 + 160 * Math.pow(t, 0.75));
+            const b = Math.floor(42 + 220 * Math.pow(t, 0.95));
+
+            data[i++] = r;
+            data[i++] = g;
+            data[i++] = b;
+            data[i++] = 255;
+          }
+        }
+
+        ctx.putImageData(image, 0, 0);
+      }
+
+      render();
+      let timer;
+      window.addEventListener('resize', function () {
+        clearTimeout(timer);
+        timer = setTimeout(render, 120);
+      });
+    })();
+  </script>
+</body>
+</html>
