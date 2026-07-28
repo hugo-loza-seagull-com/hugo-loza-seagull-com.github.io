@@ -1,5 +1,7 @@
 # hugo-loza-seagull-com.github.io
 
+GitHub Pages static site for Hugo Loza / Seagull Software, presenting core AI engineering concepts in infographic-style panels over an interactive Mandelbrot background.
+
 ## Development Approach
 
 This project follows a **Spec-Driven Development (SDD)** approach and uses **ReAct (Reasoning + Acting)** patterns to improve implementation quality, traceability, and decision-making.
