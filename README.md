@@ -1,5 +1,7 @@
 # hugo-loza-seagull-com.github.io
 
+GitHub Pages static site for Hugo Loza / Seagull Software, presenting core AI engineering concepts in infographic-style panels over an interactive Mandelbrot background.
+
 ## Development Approach
 
 This project follows a **Spec-Driven Development (SDD)** approach and uses **ReAct (Reasoning + Acting)** patterns to improve implementation quality, traceability, and decision-making.
@@ -60,5 +62,14 @@ ReAct combines deliberate reasoning with concrete actions in iterative loops.
 - Keep PRs small and scoped to specific spec outcomes.
 - Validate every change with tests and CI before merge.
 - Document important reasoning in PR descriptions (why this change, alternatives considered, risks).
+
+### Contributor Checklist
+
+- [ ] Confirm the change goal and acceptance criteria in the spec before coding.
+- [ ] Use a short ReAct loop (reason → act → observe → adjust) for each meaningful step.
+- [ ] Keep the implementation small, readable, and easy to maintain.
+- [ ] Run relevant tests/checks and record validation evidence in the PR.
+- [ ] Review changed paths for security impact (inputs, secrets, dependencies, access).
+- [ ] Explain what changed, why, and any risks or tradeoffs in clear PR notes.
 
 This approach aligns with our engineering standards: **security first, testability, clarity, and maintainability**.
