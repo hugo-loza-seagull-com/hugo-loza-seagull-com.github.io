@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Interactive commemorative page for 2026 Testers Day and Programmers Day inspired by tierconnect commits." />
+  <title>Tierconnect Commit Celebration | Testers Day + Programmers Day 2026</title>
+  <style>
+    :root {
+      --bg: #050914;
+      --panel: rgba(10, 18, 43, 0.85);
+      --line: rgba(110, 186, 255, 0.35);
+      --text: #ecf5ff;
+      --muted: #a8bfdd;
+      --accent: #6fe7ff;
+      --accent-2: #9f8fff;
+      --ok: #8dffcc;
+      --warn: #ffd48d;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, "Segoe UI", Roboto, system-ui, -apple-system, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(1200px 700px at 10% -10%, rgba(94, 195, 255, 0.18), transparent 60%),
+        radial-gradient(1000px 600px at 90% 0%, rgba(160, 143, 255, 0.2), transparent 60%),
+        linear-gradient(180deg, #050914 0%, #070d1f 100%);
+      min-height: 100vh;
+    }
+
+    .wrap {
+      width: min(1100px, 92vw);
+      margin: 0 auto;
+      padding: 2rem 0 2.5rem;
+    }
+
+    .hero, .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: 0 14px 35px rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(5px);
+    }
+
+    .hero {
+      padding: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.5rem, 3vw, 2.4rem);
+      line-height: 1.2;
+    }
+
+    .subtitle {
+      margin: 0.45rem 0 0;
+      color: var(--muted);
+      max-width: 78ch;
+    }
+
+    .actions {
+      margin-top: 0.8rem;
+      display: flex;
+      gap: 0.7rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .actions a, .actions button, .filters button {
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(3, 14, 35, 0.8);
+      color: var(--text);
+      padding: 0.4rem 0.75rem;
+      font: inherit;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .actions a:hover,
+    .actions button:hover,
+    .filters button:hover,
+    .actions a:focus-visible,
+    .actions button:focus-visible,
+    .filters button:focus-visible,
+    .search input:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 1px;
+      border-color: var(--accent);
+    }
+
+    .panel {
+      padding: 1rem;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0.65rem;
+    }
+
+    .stat {
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 12px;
+      padding: 0.65rem;
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.35rem;
+      color: var(--accent);
+    }
+
+    .stat span { color: var(--muted); font-size: 0.85rem; }
+
+    .search {
+      margin: 1rem 0 0.8rem;
+    }
+
+    .search label {
+      display: block;
+      margin-bottom: 0.35rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .search input {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 0.55rem 0.7rem;
+      color: var(--text);
+      background: rgba(4, 13, 32, 0.8);
+      font: inherit;
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 0.9rem;
+    }
+
+    .filters button[aria-pressed="true"] {
+      border-color: var(--accent);
+      background: linear-gradient(120deg, rgba(111, 231, 255, 0.25), rgba(159, 143, 255, 0.25));
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .commit {
+      border: 1px solid rgba(255, 255, 255, 0.13);
+      border-radius: 12px;
+      padding: 0.75rem;
+      background: rgba(255, 255, 255, 0.03);
+      transition: transform 120ms ease, border-color 120ms ease;
+    }
+
+    .commit:hover {
+      transform: translateY(-2px);
+      border-color: rgba(111, 231, 255, 0.7);
+    }
+
+    .commit h3 {
+      margin: 0 0 0.3rem;
+      font-size: 1rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 0.6rem;
+      align-items: start;
+    }
+
+    .tag {
+      display: inline-block;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 999px;
+      padding: 0.1rem 0.45rem;
+      font-size: 0.72rem;
+      color: #d4ecff;
+    }
+
+    .tag.tester { border-color: rgba(141, 255, 204, 0.6); color: var(--ok); }
+    .tag.programmer { border-color: rgba(255, 212, 141, 0.65); color: var(--warn); }
+
+    .meta {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.85rem;
+      line-height: 1.4;
+    }
+
+    .empty {
+      margin: 0;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    footer {
+      margin-top: 1rem;
+      color: var(--muted);
+      font-size: 0.85rem;
+      text-align: center;
+    }
+
+    @media (max-width: 620px) {
+      .wrap { width: min(1100px, 95vw); }
+      .hero, .panel { padding: 0.9rem; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero" aria-labelledby="celebration-title">
+      <h1 id="celebration-title">Celebrating 2026 Testers Day (Sep 9) + Programmers Day (Sep 13)</h1>
+      <p class="subtitle">A small interactive tribute to quality and craftsmanship, inspired by commit activity from the <strong>tierconnect</strong> organization. This page runs as a static GitHub Pages experience and starts with sample data so it remains useful without external API access.</p>
+      <div class="actions">
+        <a href="/index.html">← Back to home</a>
+        <button type="button" id="toggleLiveData" aria-pressed="false">Try live GitHub data</button>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="summary-heading">
+      <h2 id="summary-heading">Commit pulse</h2>
+      <div class="stats" id="stats" aria-live="polite"></div>
+
+      <div class="search">
+        <label for="search">Search commit message, author, repo, or short SHA</label>
+        <input id="search" name="search" type="search" placeholder="e.g. test, pipeline, docs, ana" autocomplete="off" />
+      </div>
+
+      <div class="filters" role="group" aria-label="Filter commits">
+        <button type="button" data-filter="all" aria-pressed="true">All</button>
+        <button type="button" data-filter="testers-day" aria-pressed="false">Testers Day</button>
+        <button type="button" data-filter="programmers-day" aria-pressed="false">Programmers Day</button>
+        <button type="button" data-filter="bugfix" aria-pressed="false">Bugfix</button>
+        <button type="button" data-filter="feature" aria-pressed="false">Feature</button>
+        <button type="button" data-filter="docs" aria-pressed="false">Docs</button>
+      </div>
+
+      <div class="cards" id="commitCards" aria-live="polite"></div>
+      <p class="empty" id="emptyState" hidden>No commits matched your filters.</p>
+    </section>
+
+    <footer>
+      Data source theme: tierconnect commit activity. Live fetch uses public GitHub APIs (rate limits may apply).
+    </footer>
+  </main>
+
+  <script>
+    (function () {
+      const sampleCommits = [
+        { sha: '5f9a1b2', message: 'test: strengthen flaky checkout coverage', author: 'A. Vega', repo: 'tierconnect/platform-web', date: '2026-09-09T09:10:00Z', celebration: 'testers-day', type: 'bugfix' },
+        { sha: '3c4d8f1', message: 'fix: stabilize billing integration test fixtures', author: 'L. Marquez', repo: 'tierconnect/payments-core', date: '2026-09-09T13:20:00Z', celebration: 'testers-day', type: 'bugfix' },
+        { sha: 'ab31f0e', message: 'docs: add QA regression playbook update', author: 'D. Chen', repo: 'tierconnect/dev-experience', date: '2026-09-09T15:40:00Z', celebration: 'testers-day', type: 'docs' },
+        { sha: '7ee91aa', message: 'feat: improve telemetry batching in worker loop', author: 'M. Ortiz', repo: 'tierconnect/event-bridge', date: '2026-09-13T08:18:00Z', celebration: 'programmers-day', type: 'feature' },
+        { sha: '109ce7d', message: 'refactor: simplify command routing for adapters', author: 'N. Salas', repo: 'tierconnect/gateway-api', date: '2026-09-13T11:05:00Z', celebration: 'programmers-day', type: 'feature' },
+        { sha: 'c30bf7e', message: 'test: add API contract checks for retry edges', author: 'R. Kim', repo: 'tierconnect/gateway-api', date: '2026-09-13T14:22:00Z', celebration: 'programmers-day', type: 'bugfix' },
+        { sha: 'd11be42', message: 'docs: release notes for September reliability sprint', author: 'A. Vega', repo: 'tierconnect/platform-web', date: '2026-09-13T18:05:00Z', celebration: 'programmers-day', type: 'docs' }
+      ];
+
+      const dom = {
+        stats: document.getElementById('stats'),
+        cards: document.getElementById('commitCards'),
+        empty: document.getElementById('emptyState'),
+        search: document.getElementById('search'),
+        filters: Array.from(document.querySelectorAll('[data-filter]')),
+        toggleLiveData: document.getElementById('toggleLiveData')
+      };
+
+      let commits = sampleCommits.slice();
+      let activeFilter = 'all';
+
+      function textMatches(commit, query) {
+        if (!query) return true;
+        const haystack = [commit.message, commit.author, commit.repo, commit.sha].join(' ').toLowerCase();
+        return haystack.includes(query.toLowerCase());
+      }
+
+      function getVisibleCommits() {
+        const query = dom.search.value.trim();
+        return commits
+          .filter((commit) => activeFilter === 'all' || commit.celebration === activeFilter || commit.type === activeFilter)
+          .filter((commit) => textMatches(commit, query))
+          .sort((a, b) => new Date(b.date) - new Date(a.date));
+      }
+
+      function countBy(items, key, value) {
+        return items.filter((item) => item[key] === value).length;
+      }
+
+      function drawStats(items) {
+        const metrics = [
+          { label: 'Visible commits', value: items.length },
+          { label: 'Testers Day commits', value: countBy(items, 'celebration', 'testers-day') },
+          { label: 'Programmers Day commits', value: countBy(items, 'celebration', 'programmers-day') },
+          { label: 'Unique repositories', value: new Set(items.map((item) => item.repo)).size }
+        ];
+
+        dom.stats.replaceChildren();
+        metrics.forEach((metric) => {
+          const box = document.createElement('article');
+          box.className = 'stat';
+          const strong = document.createElement('strong');
+          strong.textContent = String(metric.value);
+          const caption = document.createElement('span');
+          caption.textContent = metric.label;
+          box.append(strong, caption);
+          dom.stats.appendChild(box);
+        });
+      }
+
+      function createTag(commit) {
+        const tag = document.createElement('span');
+        tag.className = 'tag ' + (commit.celebration === 'testers-day' ? 'tester' : 'programmer');
+        tag.textContent = commit.celebration === 'testers-day' ? 'Testers Day' : 'Programmers Day';
+        return tag;
+      }
+
+      function drawCards(items) {
+        dom.cards.replaceChildren();
+
+        items.forEach((commit) => {
+          const card = document.createElement('article');
+          card.className = 'commit';
+
+          const title = document.createElement('h3');
+          const message = document.createElement('span');
+          message.textContent = commit.message;
+          title.append(message, createTag(commit));
+
+          const meta = document.createElement('p');
+          meta.className = 'meta';
+          const date = new Date(commit.date).toLocaleString(undefined, {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+          });
+          meta.textContent = `${commit.repo} · ${commit.author} · ${date} · #${commit.sha}`;
+
+          card.append(title, meta);
+          dom.cards.appendChild(card);
+        });
+
+        dom.empty.hidden = items.length > 0;
+      }
+
+      function setFilter(nextFilter) {
+        activeFilter = nextFilter;
+        dom.filters.forEach((button) => {
+          button.setAttribute('aria-pressed', String(button.dataset.filter === nextFilter));
+        });
+        render();
+      }
+
+      async function fetchTierconnectCommits() {
+        const query = encodeURIComponent('org:tierconnect committer-date:2026-09-01..2026-09-14');
+        const url = `https://api.github.com/search/commits?q=${query}&per_page=25`;
+
+        const response = await fetch(url, {
+          headers: {
+            Accept: 'application/vnd.github.cloak-preview+json'
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error(`GitHub API request failed with status ${response.status}`);
+        }
+
+        const payload = await response.json();
+        if (!payload.items || !Array.isArray(payload.items) || payload.items.length === 0) {
+          throw new Error('No live commits found for the requested window.');
+        }
+
+        const mapped = payload.items
+          .map((item) => {
+            const commitDate = item.commit?.committer?.date || item.commit?.author?.date;
+            if (!commitDate) return null;
+            const day = new Date(commitDate).getUTCDate();
+            let celebration = '';
+            if (day === 9) celebration = 'testers-day';
+            if (day === 13) celebration = 'programmers-day';
+            if (!celebration) return null;
+
+            const message = (item.commit?.message || 'Commit update').split('\n')[0].trim();
+            const lowered = message.toLowerCase();
+            const type = lowered.includes('docs') ? 'docs' : lowered.includes('fix') || lowered.includes('test') ? 'bugfix' : 'feature';
+
+            return {
+              sha: (item.sha || '').slice(0, 7),
+              message,
+              author: item.commit?.author?.name || item.commit?.committer?.name || 'Unknown',
+              repo: item.repository?.full_name || 'tierconnect/unknown',
+              date: commitDate,
+              celebration,
+              type
+            };
+          })
+          .filter(Boolean);
+
+        if (mapped.length === 0) {
+          throw new Error('Live data had no commits tagged for Sep 9 or Sep 13.');
+        }
+
+        return mapped;
+      }
+
+      function render() {
+        const visible = getVisibleCommits();
+        drawStats(visible);
+        drawCards(visible);
+      }
+
+      dom.filters.forEach((button) => {
+        button.addEventListener('click', function () {
+          setFilter(button.dataset.filter);
+        });
+      });
+
+      dom.search.addEventListener('input', render);
+
+      dom.toggleLiveData.addEventListener('click', async function () {
+        dom.toggleLiveData.disabled = true;
+        dom.toggleLiveData.textContent = 'Loading…';
+
+        try {
+          commits = await fetchTierconnectCommits();
+          dom.toggleLiveData.textContent = 'Live data loaded';
+          dom.toggleLiveData.setAttribute('aria-pressed', 'true');
+        } catch (error) {
+          commits = sampleCommits.slice();
+          dom.toggleLiveData.textContent = 'Live fetch unavailable — using sample data';
+        } finally {
+          dom.toggleLiveData.disabled = false;
+          render();
+        }
+      });
+
+      render();
+    })();
+  </script>
+</body>
+</html>
